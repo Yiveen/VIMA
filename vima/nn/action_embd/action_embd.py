@@ -27,6 +27,61 @@ class ActionEmbedding(nn.Module):
         return self._output_dim
 
     def forward(self, x_dict: dict[str, torch.Tensor]):
+        '''
+        input:
+            x_dict: dict is self._de_discretize_actions(action)
+
+        output:
+            k : 'pos0_position','pos1_position'
+            self._embed_dict[k]() is a Linear Layer, then cat them together(for different pos0/1)
+            then pass to self._post_layer
+
+            self._post_layer = (
+            nn.Identity()
+            if output_dim == embed_dict_output_dim
+            else nn.Linear(embed_dict_output_dim, output_dim)
+        )
+
+        ActionEmbedding(
+  (_embed_dict): ModuleDict(
+    (pose0_position): ContinuousActionEmbedding(
+      (_layer): Sequential(
+        (0): Linear(in_features=2, out_features=256, bias=True)
+        (1): Identity()
+        (2): ReLU(inplace=True)
+        (3): Linear(in_features=256, out_features=256, bias=True)
+      )
+    )
+    (pose0_rotation): ContinuousActionEmbedding(
+      (_layer): Sequential(
+        (0): Linear(in_features=4, out_features=256, bias=True)
+        (1): Identity()
+        (2): ReLU(inplace=True)
+        (3): Linear(in_features=256, out_features=256, bias=True)
+      )
+    )
+    (pose1_position): ContinuousActionEmbedding(
+      (_layer): Sequential(
+        (0): Linear(in_features=2, out_features=256, bias=True)
+        (1): Identity()
+        (2): ReLU(inplace=True)
+        (3): Linear(in_features=256, out_features=256, bias=True)
+      )
+    )
+    (pose1_rotation): ContinuousActionEmbedding(
+      (_layer): Sequential(
+        (0): Linear(in_features=4, out_features=256, bias=True)
+        (1): Identity()
+        (2): ReLU(inplace=True)
+        (3): Linear(in_features=256, out_features=256, bias=True)
+      )
+    )
+  )
+  (_post_layer): Linear(in_features=1024(256*4), out_features=768, bias=True)
+)
+
+
+        '''
         if not self._input_fields_checked:
             assert set(x_dict.keys()) == set(self._embed_dict.keys())
             self._input_fields_checked = True

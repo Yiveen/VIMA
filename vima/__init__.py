@@ -5,6 +5,7 @@ from .policy import *
 
 
 def create_policy_from_ckpt(ckpt_path, device):
+    print(ckpt_path)
     assert os.path.exists(ckpt_path), "Checkpoint path does not exist"
     ckpt = torch.load(ckpt_path, map_location=device)
     policy_instance = VIMAPolicy(**ckpt["cfg"])

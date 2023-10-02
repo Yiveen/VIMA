@@ -81,6 +81,29 @@ class XAttnGPT(OpenAIGPTPreTrainedModel):
         batch_first: bool = False,
         obs_action_masks: torch.Tensor | None = None,
     ):
+        '''
+        TODO: finish this explanation
+        Input:
+            obs_action_tokens: shape(6,1,768) -> (1,6,768)
+            obs_action_position_ids:shape(1,6)
+            prompt_tokens:shape(11,1,768) prompt has 11 'words' -> (1,11,768)
+            prompt_mask:(1,11) all True
+            prompt_position_ids:(1,11) 累加求和
+            batch_first:False
+            obs_action_masks:(1,6) all True
+
+
+        Process:
+        if batch_first:
+            B_oa, L_oa, E_oa = obs_action_tokens.shape L=11,E=768,B=1
+            B_p, L_p, E_p = prompt_tokens.shape
+        else:
+            L_oa, B_oa, E_oa = obs_action_tokens.shape
+            L_p, B_p, E_p = prompt_tokens.shape
+
+        Output
+            predicted_action_tokens:(6,1,768)
+        '''
         if not self._input_checked:
             self._check_input(
                 obs_action_tokens,
@@ -101,7 +124,7 @@ class XAttnGPT(OpenAIGPTPreTrainedModel):
         if obs_action_position_ids is None:
             obs_action_position_ids = self.position_ids[None, : input_shape[-1]]
         position_embeds = self.positions_embed(obs_action_position_ids)
-
+        #position_embds is the observation input embeddings(including the positional encoding)
         obs_action_tokens = obs_action_tokens + position_embeds
         obs_action_tokens = self.drop(obs_action_tokens)
 

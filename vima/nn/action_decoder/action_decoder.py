@@ -35,6 +35,12 @@ class ActionDecoder(nn.Module):
                     norm_type=norm_type,
                     last_layer_gain=last_layer_gain,
                 )
+            # action_dims={
+            #     "pose0_position": [50, 100],
+            #     "pose0_rotation": [50] * 4,
+            #     "pose1_position": [50, 100],
+            #     "pose1_rotation": [50] * 4,
+            # }
             elif isinstance(v, list):
                 self._decoders[k] = MultiCategoricalNet(
                     input_dim,

@@ -106,6 +106,14 @@ def main(cfg):
         meta_info = env.meta_info
         prompt = env.prompt
         prompt_assets = env.prompt_assets
+
+        # ================================================
+        # # 创建可视化窗口
+        from copy import deepcopy
+        top = deepcopy(obs['rgb']['top'].transpose(1, 2, 0))
+        front = deepcopy(obs['rgb']['front'].transpose(1, 2, 0))
+        # ================================================
+
         elapsed_steps = 0
         inference_cache = {}
         while True:
@@ -191,12 +199,22 @@ def main(cfg):
             predicted_action_tokens = predicted_action_tokens[-1].unsqueeze(
                 0
             )  # (1, B, E)
-            dist_dict = policy.forward_action_decoder(predicted_action_tokens)
+            dist_dict = policy.forward_action_decoder(predicted_action_tokens) #change to {'pose0_position': tensor([[[16, 35]]]), 'pose0_rotation': tensor([[[25, 25, 25, 49]]]), 'pose1_position': tensor([[[12, 86]]]), 'pose1_rotation': tensor([[[25, 25, 49, 19]]])}
             actions = {k: v.mode() for k, v in dist_dict.items()}
-            action_tokens = policy.forward_action_token(actions)  # (1, B, E)
-            action_tokens = action_tokens.squeeze(0)  # (B, E)
+            action_tokens = policy.forward_action_token(actions)  # (1, B, E) (1,1,768)
+            action_tokens = action_tokens.squeeze(0)  # (B, E) (1,768)
             inference_cache["action_tokens"].append(action_tokens[0])
-            actions = policy._de_discretize_actions(actions)
+            actions = policy._de_discretize_actions(actions) # output two groups of action position ratio and rotation
+
+            # ================================================
+            pos_10 = np.array(deepcopy(actions["pose1_position"][0][0][0]))
+            pos_11 = np.array(deepcopy(actions["pose1_position"][0][0][1]))
+
+            pos_00 = np.array(deepcopy(actions["pose0_position"][0][0][0]))
+            pos_01 = np.array(deepcopy(actions["pose0_position"][0][0][1]))
+
+            # ================================================
+
             action_bounds = [meta_info["action_bounds"]]
             action_bounds_low = [action_bound["low"] for action_bound in action_bounds]
             action_bounds_high = [
@@ -224,6 +242,34 @@ def main(cfg):
             actions["pose1_position"] = torch.clamp(
                 actions["pose1_position"], min=action_bounds_low, max=action_bounds_high
             )
+
+            # =======================yiwen debug ============================
+            # 创建可视化窗口
+            from matplotlib import pyplot as plt
+            #
+            plt.figure()
+            plt.subplot(121)
+            plt.imshow(top)
+            plt.title('Top_view \n Green square is the initial position. \n  Red point is the finial put position.')
+
+            plt.scatter(pos_11 * 256, (pos_10) * 128, c='red', marker='o', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
+            plt.scatter(pos_01 * 256, (pos_00) * 128, c='green', marker='s', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
+            plt.subplot(122)
+            plt.imshow(front)
+            plt.title('Front_view \n Green square is the initial position. \n  Red point is the finial put position.')
+
+            plt.scatter(pos_11 * 256, (pos_10) * 128, c='red', marker='o', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
+            plt.scatter(pos_01 * 256, (pos_00) * 128, c='green', marker='s', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
+            plt.suptitle(
+                'Model output(Varaibles:actions["pose0_position"],actions["pose1_position"]) \n For initial position [{:.2f}, {:.2f}] \n For finial put position [{:.2f}, {:.2f}]'.format(
+                    np.round(pos_00, 1), np.round(pos_01, 1), np.round(pos_10, 1), np.round(pos_11, 1)))
+            plt.show()
+
+            # =====================================================================
+
+
+
+
             actions["pose0_rotation"] = actions["pose0_rotation"] * 2 - 1
             actions["pose1_rotation"] = actions["pose1_rotation"] * 2 - 1
             actions["pose0_rotation"] = torch.clamp(
@@ -234,9 +280,7 @@ def main(cfg):
             )
             actions = {k: v.cpu().numpy() for k, v in actions.items()}
             actions = any_slice(actions, np.s_[0, 0])
-            input()
             obs, _, done, info = env.step(actions)
-            input()
             elapsed_steps += 1
             if done:
                 break
@@ -379,6 +423,11 @@ def prepare_obs(
     rgb_dict: dict | None = None,
     meta: dict,
 ):
+    '''
+    Input: obs - observation information: obs:dict{‘ee’:[0],'segm':{'front': the whole segmentation map,'top':},'rgb':{'front': the whole rgb images,'top':same}}
+    '''
+
+
     assert not (rgb_dict is not None and "rgb" in obs)
     rgb_dict = rgb_dict or obs.pop("rgb")
     segm_dict = obs.pop("segm")
@@ -417,6 +466,15 @@ def prepare_obs(
                 h, w = ymax - ymin, xmax - xmin
                 bboxes.append([int(x_center), int(y_center), int(h), int(w)])
                 cropped_img = rgb_this_view[:, ymin : ymax + 1, xmin : xmax + 1]
+
+                # from matplotlib import pyplot as plt
+                # plt.figure()
+                # plt.subplot()
+                # plt.title('image_batch:{}'.format(view))
+                # plt.axis('OFF')
+                # plt.imshow(cropped_img.transpose(1, 2, 0))
+                # plt.show()
+
                 if cropped_img.shape[1] != cropped_img.shape[2]:
                     diff = abs(cropped_img.shape[1] - cropped_img.shape[2])
                     pad_before, pad_after = int(diff / 2), diff - int(diff / 2)

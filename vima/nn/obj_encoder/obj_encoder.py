@@ -70,6 +70,17 @@ class ObjEncoder(nn.Module):
         mask,
     ):
         """
+        Input:
+                cropped_img: Dict{'front':shape(n_obj,3,32,32), 'top':shape(n_obj,3,32,32)}
+                bbox: Dict{'front':shape(n_obj,1,4), 'top':shape(n_obj,1,4)}
+        Process:
+                cropped_img - > cropped_img_encoder -> img_feats:Dict{'front':shape(2,1,768),'top':shape(2,1,768)}
+                bbox_mlp - > bbox_mlp -> bbox: Dict{'front':shape(2,1,768),'top':shape(2,1,768)}
+                Then: torch.concat([img_feats[view], bbox[view]], dim=-1)
+                And pass that to a Linear Layer
+        Output:
+                in_feats: Dict{'front':shape(2,1,768),'top':shape(2,1,768)}
+                out: 综合的img输入的embedding
         out: (..., n_objs * n_views, E)
         """
         img_feats = {

@@ -12,7 +12,7 @@ class VIMAPolicy(nn.Module):
     def __init__(
         self,
         *,
-        embed_dim: int,  # 384
+        embed_dim: int,  # 384   768
         xf_n_layers: int,  # 4
         sattn_n_heads: int,  # 12
         xattn_n_heads: int,  # 12
@@ -92,8 +92,8 @@ class VIMAPolicy(nn.Module):
             last_layer_gain=0.01,
         )
 
-        self.prompt_embedding = vnn.WordEmbedding()
-        self.t5_prompt_encoder = vnn.T5PromptEncoder()
+        self.prompt_embedding = vnn.WordEmbedding() # model = AutoModel.from_pretrained("t5-base") to get the embedding of prompt
+        self.t5_prompt_encoder = vnn.T5PromptEncoder() # model = T5EncoderModel.from_pretrained("t5-base") to get the embedding of the whole input
         self.t5_prompt_encoder_post_layer = (
             nn.Identity()
             if embed_dim == self.t5_prompt_encoder.output_dim
@@ -156,13 +156,19 @@ class VIMAPolicy(nn.Module):
         )
 
         predicted_action_tokens = tokens_out[n_max_objs - 1 :: n_max_objs + 1]
+        # tokens_out shape(6.1.768) -> predicted_action_tokens shape(1,1,768)
         return predicted_action_tokens
 
     def forward_prompt_assembly(self, prompts):
+        '''
+        word_ptr, img_ptr: counter for the word prompt and image prompt
+        assembled_prompt(768,11) -> prompt_tokens(11,1,768) -> prompt_tokens(11,1,768)
+        assembled_mask(11) -> (1,11)
+        '''
         raw_prompts_token_type, word_batch, image_batch = prompts
-        batch_word_emb = self.prompt_embedding(word_batch)
-        batch_image_emb = self.obj_encoder(**image_batch)
-        batch_image_emb = self.prompt_obj_post_layer(batch_image_emb)
+        batch_word_emb = self.prompt_embedding(word_batch) #shape (7,768)
+        batch_image_emb = self.obj_encoder(**image_batch) #shape (2,2,768)
+        batch_image_emb = self.prompt_obj_post_layer(batch_image_emb) #shape (2,2,768)
         n_max_objs = batch_image_emb.shape[-2]
 
         L_max = 0
@@ -240,6 +246,17 @@ class VIMAPolicy(nn.Module):
         return prompt_tokens, prompt_masks
 
     def forward_obs_token(self, obs):
+        '''
+        处理VIMA Observation信息的模型
+        Input:  Dict: {'ee': tensor([[0]]), 'objects': {'cropped_img':{'front': shape (1,1,3,3,32,32) , dtype=torch.uint8 , 'top': shape (1,1,3,3,32,32), dtype=torch.uint8}, 'bbox': {'front': (1,1,3,4), 'top':(1,1,3,4)}}}
+                Note here we have 3 objects and for each object the image crop size is (3,32,32)
+
+        Process: In this function, pass the 'objects' to the 'obj_encoder' to get img_feats, pass 'ee' to 'end_effector_encoder' to get end_effector features
+                then, using obs_fusion_layer(Linear layer) to get finial output
+        Output:
+                obs_feats: shape (1,1,6,768)
+                obj_mask: (1,1,6)
+        '''
         objects, ee = obs["objects"], obs["ee"]
         leading_dims = ee.shape[:2]
 

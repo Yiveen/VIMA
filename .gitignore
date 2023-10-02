@@ -7,6 +7,12 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+thirdparty/
+venv/
+VIMABench/
+data/
+.vscode/
+.idea/
 .Python
 build/
 develop-eggs/

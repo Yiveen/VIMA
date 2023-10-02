@@ -100,32 +100,32 @@ def main(cfg):
 
         obs = env.reset()
 
-        # ==============================================================================================================
-        # ============= bkx debug ======================================================================================
-        """
-        可视化obs
-        """
-        from matplotlib import pyplot as plt
-        plt.figure()
-        plt.subplot(221)
-        plt.title('segm.front')
-        plt.axis('OFF')
-        plt.imshow(obs['segm']['front'])
-        plt.subplot(222)
-        plt.title('segm.top')
-        plt.axis('OFF')
-        plt.imshow(obs['segm']['top'])
-        plt.subplot(223)
-        plt.title('rgb.front')
-        plt.axis('OFF')
-        plt.imshow(obs['rgb']['front'].transpose(1, 2, 0))
-        plt.subplot(224)
-        plt.title('rgb.top')
-        plt.axis('OFF')
-        plt.imshow(obs['rgb']['top'].transpose(1, 2, 0))
-        # plt.show()
-        # ============= bkx debug ======================================================================================
-        # ==============================================================================================================
+        # # ==============================================================================================================
+        # # ============= bkx debug ======================================================================================
+        # """
+        # 可视化obs
+        # """
+        # from matplotlib import pyplot as plt
+        # plt.figure()
+        # plt.subplot(221)
+        # plt.title('segm.front')
+        # plt.axis('OFF')
+        # plt.imshow(obs['segm']['front'])
+        # plt.subplot(222)
+        # plt.title('segm.top')
+        # plt.axis('OFF')
+        # plt.imshow(obs['segm']['top'])
+        # plt.subplot(223)
+        # plt.title('rgb.front')
+        # plt.axis('OFF')
+        # plt.imshow(obs['rgb']['front'].transpose(1, 2, 0))
+        # plt.subplot(224)
+        # plt.title('rgb.top')
+        # plt.axis('OFF')
+        # plt.imshow(obs['rgb']['top'].transpose(1, 2, 0))
+        # # plt.show()
+        # # ============= bkx debug ======================================================================================
+        # # ==============================================================================================================
 
         env.render()
 
@@ -133,48 +133,61 @@ def main(cfg):
         prompt = env.prompt  # 一个例子：{str}'Put the {dragged_obj_1} into the {base_obj}.'
         prompt_assets = env.prompt_assets
 
-        # ==============================================================================================================
-        # ============= bkx debug ======================================================================================
-        """
-        可视化prompt_assets中的内容，为什么prompt_assets和上面的图像对不上？
-        """
-        from matplotlib import pyplot as plt
-        plt.figure()
-        plt.subplot(241)
-        plt.title('base_obj.rgb.front')
-        plt.axis('OFF')
-        plt.imshow(prompt_assets['base_obj']['rgb']['front'].transpose(1, 2, 0))
-        plt.subplot(242)
-        plt.title('base_obj.rgb.top')
-        plt.axis('OFF')
-        plt.imshow(prompt_assets['base_obj']['rgb']['top'].transpose(1, 2, 0))
-        plt.subplot(243)
-        plt.title('base_obj.segm.front')
-        plt.axis('OFF')
-        plt.imshow(prompt_assets['base_obj']['segm']['front'])
-        plt.subplot(244)
-        plt.title('base_obj.segm.top')
-        plt.axis('OFF')
-        plt.imshow(prompt_assets['base_obj']['segm']['top'])
-        plt.subplot(245)
-        plt.title('dragged_obj_1.rgb.front')
-        plt.axis('OFF')
-        plt.imshow(prompt_assets['dragged_obj_1']['rgb']['front'].transpose(1, 2, 0))
-        plt.subplot(246)
-        plt.title('dragged_obj_1.rgb.top')
-        plt.axis('OFF')
-        plt.imshow(prompt_assets['dragged_obj_1']['rgb']['top'].transpose(1, 2, 0))
-        plt.subplot(247)
-        plt.title('dragged_obj_1.segm.front')
-        plt.axis('OFF')
-        plt.imshow(prompt_assets['dragged_obj_1']['segm']['front'])
-        plt.subplot(248)
-        plt.title('dragged_obj_1.segm.top')
-        plt.axis('OFF')
-        plt.imshow(prompt_assets['dragged_obj_1']['segm']['top'])
-        plt.show()
-        # ============= bkx debug ======================================================================================
-        # ==============================================================================================================
+        # # ==============================================================================================================
+
+        # # # 创建可视化窗口
+        # from matplotlib import pyplot as plt
+        # from matplotlib.patches import Rectangle
+        # plt.figure()
+        # plt.imshow(obs['rgb']['top'].transpose(1, 2, 0))
+        # # 绘制范围线段
+        # plt.gca().add_patch(Rectangle((382, 75), 126, 480,
+        #                               angle=30,
+        #                               edgecolor='red',
+        #                               facecolor='none',
+        #                               lw=4))
+
+        # # ==============================================================================================================
+        # # ============= bkx debug ======================================================================================
+        # """
+        # 可视化prompt_assets中的内容，为什么prompt_assets和上面的图像对不上？
+        # """
+        # from matplotlib import pyplot as plt
+        # plt.figure()
+        # plt.subplot(241)
+        # plt.title('base_obj.rgb.front')
+        # plt.axis('OFF')
+        # plt.imshow(prompt_assets['base_obj']['rgb']['front'].transpose(1, 2, 0))
+        # plt.subplot(242)
+        # plt.title('base_obj.rgb.top')
+        # plt.axis('OFF')
+        # plt.imshow(prompt_assets['base_obj']['rgb']['top'].transpose(1, 2, 0))
+        # plt.subplot(243)
+        # plt.title('base_obj.segm.front')
+        # plt.axis('OFF')
+        # plt.imshow(prompt_assets['base_obj']['segm']['front'])
+        # plt.subplot(244)
+        # plt.title('base_obj.segm.top')
+        # plt.axis('OFF')
+        # plt.imshow(prompt_assets['base_obj']['segm']['top'])
+        # plt.subplot(245)
+        # plt.title('dragged_obj_1.rgb.front')
+        # plt.axis('OFF')
+        # plt.imshow(prompt_assets['dragged_obj_1']['rgb']['front'].transpose(1, 2, 0))
+        # plt.subplot(246)
+        # plt.title('dragged_obj_1.rgb.top')
+        # plt.axis('OFF')
+        # plt.imshow(prompt_assets['dragged_obj_1']['rgb']['top'].transpose(1, 2, 0))
+        # plt.subplot(247)
+        # plt.title('dragged_obj_1.segm.front')
+        # plt.axis('OFF')
+        # plt.imshow(prompt_assets['dragged_obj_1']['segm']['front'])
+        # plt.subplot(248)
+        # plt.title('dragged_obj_1.segm.top')
+        # plt.axis('OFF')
+        # plt.imshow(prompt_assets['dragged_obj_1']['segm']['top'])
+        # plt.show()
+        # # ============= bkx debug ======================================================================================
 
         elapsed_steps = 0
         inference_cache = {}
@@ -323,301 +336,298 @@ def main(cfg):
             if done:
                 break
 
+        def prepare_prompt(*, prompt: str, prompt_assets: dict, views: list[str]):
+            """
+            输入
+            prompt是个str:'Put the {dragged_obj_1} into the {base_obj}.'
+            prompt_assets: 字典，里面有两个元素'base_obj'和'dragged_obj_1'.
+                    每个元素里面又有三个元素，分别是
+                            'rgb': 里面是三通道的图，分别是'front'和'top'
+                            'segm': 里面是单通道的图'front'和'top',对于分割图，物体是0背景是255. 和字典'obj_info'
+                                    'obj_info': 例子{'obj_id': 0, 'obj_name': 'container', 'obj_color': 'purple'} 和 {'obj_id': 0, 'obj_name': 'block', 'obj_color': 'red swirl'}
+                            'placeholder_type': 'object'
+            views: 列表['front', 'top']
+            ---
+            输出
+            raw_prompt_token_type: list1 [[0, 0, 1, 0, 0, 1, 0, 0, 0]]
+            word_batch: tensor([5306,    8,  139,    8,    3,    5,    1])
+                    word_batch是个list，里面append的是token，token来源是filled_prompt，
+            image_batch: 字典，存储一些图像的tensor
+            """
+            views = sorted(views)  # ['front', 'top']
+            encoding = tokenizer.encode(prompt,
+                                        add_special_tokens=True)  # {list:9} '_Put','_the','{dragged_obj_1}','_into','_the','{base_obj}',''_'','.','</s>'
+            prompt_ids, prompt_tokens = encoding.ids, encoding.tokens  # prompt_ids:[5306, 8, 32104, 139, 8, 32100, 3, 5, 1], prompt_tokens和上面的encoding一致
+            assert set(prompt_assets.keys()) == set(
+                [token[1:-1] for token in prompt_tokens if token in PLACEHOLDERS]
+            )
+            filled_prompt = []
+            for id, token in zip(prompt_ids, prompt_tokens):
+                if token not in PLACEHOLDERS:  # PLACEHOLDERS是个list，列表中的内容是一大堆的{}包进去的内容
+                    assert "{" not in token and "}" not in token
+                    filled_prompt.append(id)
+                else:
+                    assert token.startswith("{") and token.endswith("}")
+                    asset_name = token[1:-1]
+                    assert asset_name in prompt_assets, f"missing prompt asset {asset_name}"
+                    asset = prompt_assets[
+                        asset_name]  # asset中有'rgb'和'segm'，'segm'中有'front','top','obj_info'，其中'obj_info':{'obj_id': 0, 'obj_name': 'block', 'obj_color': 'red swirl'}
+                    obj_info = asset["segm"]["obj_info"]  # {'obj_id': 0, 'obj_name': 'block', 'obj_color': 'red swirl'}
+                    placeholder_type = asset["placeholder_type"]
+                    if placeholder_type == "object":
+                        objects = [obj_info["obj_id"]]
+                    elif placeholder_type == "scene":
+                        objects = [each_info["obj_id"] for each_info in obj_info]
+                    obj_repr = {
+                        "cropped_img": {view: [] for view in views},
+                        "bbox": {view: [] for view in views},
+                    }
+                    for view in views:
+                        rgb_this_view = asset["rgb"][view]
+                        segm_this_view = asset["segm"][view]
+                        bboxes = []
+                        cropped_imgs = []
+                        for obj_id in objects:
+                            ys, xs = np.nonzero(segm_this_view == obj_id)
+                            """
+                            可视化检查
+                            """
+                            # -- bkx debug --------------------------------------------
+                            from matplotlib import pyplot as plt
+                            plt.figure()
+                            plt.title('segm_this_view')
+                            plt.imshow(segm_this_view, cmap='jet')
+                            plt.show()
+                            # -- bkx debug --------------------------------------------
 
-def prepare_prompt(*, prompt: str, prompt_assets: dict, views: list[str]):
-    """
-    输入
-    prompt是个str:'Put the {dragged_obj_1} into the {base_obj}.'
-    prompt_assets: 字典，里面有两个元素'base_obj'和'dragged_obj_1'.
-            每个元素里面又有三个元素，分别是
-                    'rgb': 里面是三通道的图，分别是'front'和'top'
-                    'segm': 里面是单通道的图'front'和'top',对于分割图，物体是0背景是255. 和字典'obj_info'
-                            'obj_info': 例子{'obj_id': 0, 'obj_name': 'container', 'obj_color': 'purple'} 和 {'obj_id': 0, 'obj_name': 'block', 'obj_color': 'red swirl'}
-                    'placeholder_type': 'object'
-    views: 列表['front', 'top']
-    ---
-    输出
-    raw_prompt_token_type: list1 [[0, 0, 1, 0, 0, 1, 0, 0, 0]]
-    word_batch: tensor([5306,    8,  139,    8,    3,    5,    1])
-            word_batch是个list，里面append的是token，token来源是filled_prompt，
-    image_batch: 字典，存储一些图像的tensor
-    """
-    views = sorted(views)  # ['front', 'top']
-    encoding = tokenizer.encode(prompt, add_special_tokens=True)  # {list:9} '_Put','_the','{dragged_obj_1}','_into','_the','{base_obj}',''_'','.','</s>'
-    prompt_ids, prompt_tokens = encoding.ids, encoding.tokens  # prompt_ids:[5306, 8, 32104, 139, 8, 32100, 3, 5, 1], prompt_tokens和上面的encoding一致
-    assert set(prompt_assets.keys()) == set(
-        [token[1:-1] for token in prompt_tokens if token in PLACEHOLDERS]
-    )
-    filled_prompt = []
-    for id, token in zip(prompt_ids, prompt_tokens):
-        if token not in PLACEHOLDERS:  # PLACEHOLDERS是个list，列表中的内容是一大堆的{}包进去的内容
-            assert "{" not in token and "}" not in token
-            filled_prompt.append(id)
-        else:
-            assert token.startswith("{") and token.endswith("}")
-            asset_name = token[1:-1]
-            assert asset_name in prompt_assets, f"missing prompt asset {asset_name}"
-            asset = prompt_assets[asset_name]  # asset中有'rgb'和'segm'，'segm'中有'front','top','obj_info'，其中'obj_info':{'obj_id': 0, 'obj_name': 'block', 'obj_color': 'red swirl'}
-            obj_info = asset["segm"]["obj_info"]  # {'obj_id': 0, 'obj_name': 'block', 'obj_color': 'red swirl'}
-            placeholder_type = asset["placeholder_type"]
-            if placeholder_type == "object":
-                objects = [obj_info["obj_id"]]
-            elif placeholder_type == "scene":
-                objects = [each_info["obj_id"] for each_info in obj_info]
-            obj_repr = {
-                "cropped_img": {view: [] for view in views},
-                "bbox": {view: [] for view in views},
+                            if len(xs) < 2 or len(ys) < 2:
+                                continue
+                            xmin, xmax = np.min(xs), np.max(xs)
+                            ymin, ymax = np.min(ys), np.max(ys)
+                            x_center, y_center = (xmin + xmax) / 2, (ymin + ymax) / 2
+                            h, w = ymax - ymin, xmax - xmin
+                            bboxes.append([int(x_center), int(y_center), int(h), int(w)])
+                            cropped_img = rgb_this_view[:, ymin: ymax + 1, xmin: xmax + 1]
+                            if cropped_img.shape[1] != cropped_img.shape[2]:
+                                diff = abs(cropped_img.shape[1] - cropped_img.shape[2])
+                                pad_before, pad_after = int(diff / 2), diff - int(diff / 2)
+                                if cropped_img.shape[1] > cropped_img.shape[2]:
+                                    pad_width = ((0, 0), (0, 0), (pad_before, pad_after))
+                                else:
+                                    pad_width = ((0, 0), (pad_before, pad_after), (0, 0))
+                                cropped_img = np.pad(
+                                    cropped_img,
+                                    pad_width,
+                                    mode="constant",
+                                    constant_values=0,
+                                )
+                                assert cropped_img.shape[1] == cropped_img.shape[2], "INTERNAL"
+                            cropped_img = rearrange(cropped_img, "c h w -> h w c")
+                            cropped_img = np.asarray(cropped_img)
+                            cropped_img = cv2.resize(
+                                cropped_img,
+                                (32, 32),
+                                interpolation=cv2.INTER_AREA,
+                            )
+                            cropped_img = rearrange(cropped_img, "h w c -> c h w")
+                            cropped_imgs.append(cropped_img)
+                        bboxes = np.asarray(bboxes)
+                        cropped_imgs = np.asarray(cropped_imgs)
+                        obj_repr["bbox"][view] = bboxes
+                        obj_repr["cropped_img"][view] = cropped_imgs
+                    filled_prompt.append(obj_repr)
+            raw_prompt = [filled_prompt]
+            max_n_objs_prompt = {view: 0 for view in views}
+            for prompt in raw_prompt:
+                for token in prompt:
+                    if isinstance(token, dict):
+                        for view in views:
+                            max_n_objs_prompt[view] = max(
+                                max_n_objs_prompt[view], len(token["cropped_img"][view])
+                            )
+            raw_prompt_token_type, word_batch, image_batch = [], [], []
+            for prompt in raw_prompt:
+                token_type = []
+                for token in prompt:
+                    if isinstance(token, int):
+                        token_type.append(0)
+                        word_batch.append(token)
+                    elif isinstance(token, dict):
+                        token_type.append(1)
+                        n_objs_prompt = {
+                            view: len(token["cropped_img"][view]) for view in views
+                        }
+                        # add mask
+                        token["mask"] = {
+                            view: np.ones((n_objs_prompt[view],), dtype=bool)
+                            for view in views
+                        }
+                        n_objs_to_pad = {
+                            view: max_n_objs_prompt[view] - n_objs_prompt[view]
+                            for view in views
+                        }
+                        objs_pad = {
+                            "bbox": {
+                                view: np.zeros((n_objs_to_pad[view], 4), dtype=np.int64)
+                                for view in views
+                            },
+                            "cropped_img": {
+                                view: np.zeros(
+                                    (n_objs_to_pad[view], 3, 32, 32),
+                                    dtype=np.uint8,
+                                )
+                                for view in views
+                            },
+                            "mask": {
+                                view: np.zeros((n_objs_to_pad[view]), dtype=bool)
+                                for view in views
+                            },
+                        }
+                        token = any_concat([token, objs_pad], dim=0)
+                        image_batch.append(token)
+                raw_prompt_token_type.append(token_type)
+            assert sum([len(prompt) for prompt in raw_prompt_token_type]) == len(
+                word_batch
+            ) + len(image_batch)
+            word_batch = any_stack(word_batch, dim=0)
+            image_batch = any_to_datadict(stack_sequence_fields(image_batch))
+
+            word_batch = any_to_torch_tensor(word_batch)
+            image_batch = image_batch.to_torch_tensor()
+            return raw_prompt_token_type, word_batch, image_batch
+
+        def prepare_obs(
+                *,
+                obs: dict,
+                rgb_dict: dict | None = None,
+                meta: dict,
+        ):
+            assert not (rgb_dict is not None and "rgb" in obs)
+            rgb_dict = rgb_dict or obs.pop("rgb")
+            segm_dict = obs.pop("segm")
+            views = sorted(rgb_dict.keys())
+            assert meta["n_objects"] == len(meta["obj_id_to_info"])
+            objects = list(meta["obj_id_to_info"].keys())
+
+            L_obs = get_batch_size(obs)
+
+            obs_list = {
+                "ee": obs["ee"],
+                "objects": {
+                    "cropped_img": {view: [] for view in views},
+                    "bbox": {view: [] for view in views},
+                    "mask": {view: [] for view in views},
+                },
             }
-            for view in views:
-                rgb_this_view = asset["rgb"][view]
-                segm_this_view = asset["segm"][view]
-                bboxes = []
-                cropped_imgs = []
-                for obj_id in objects:
-                    ys, xs = np.nonzero(segm_this_view == obj_id)
-                    """
-                    可视化检查
-                    """
-                    # -- bkx debug --------------------------------------------
-                    from matplotlib import pyplot as plt
-                    plt.figure()
-                    plt.title('segm_this_view')
-                    plt.imshow(segm_this_view, cmap='jet')
-                    plt.show()
-                    # -- bkx debug --------------------------------------------
 
-                    if len(xs) < 2 or len(ys) < 2:
-                        continue
-                    xmin, xmax = np.min(xs), np.max(xs)
-                    ymin, ymax = np.min(ys), np.max(ys)
-                    x_center, y_center = (xmin + xmax) / 2, (ymin + ymax) / 2
-                    h, w = ymax - ymin, xmax - xmin
-                    bboxes.append([int(x_center), int(y_center), int(h), int(w)])
-                    cropped_img = rgb_this_view[:, ymin: ymax + 1, xmin: xmax + 1]
-                    if cropped_img.shape[1] != cropped_img.shape[2]:
-                        diff = abs(cropped_img.shape[1] - cropped_img.shape[2])
-                        pad_before, pad_after = int(diff / 2), diff - int(diff / 2)
-                        if cropped_img.shape[1] > cropped_img.shape[2]:
-                            pad_width = ((0, 0), (0, 0), (pad_before, pad_after))
-                        else:
-                            pad_width = ((0, 0), (pad_before, pad_after), (0, 0))
-                        cropped_img = np.pad(
-                            cropped_img,
-                            pad_width,
-                            mode="constant",
-                            constant_values=0,
-                        )
-                        assert cropped_img.shape[1] == cropped_img.shape[2], "INTERNAL"
-                    cropped_img = rearrange(cropped_img, "c h w -> h w c")
-                    cropped_img = np.asarray(cropped_img)
-                    cropped_img = cv2.resize(
-                        cropped_img,
-                        (32, 32),
-                        interpolation=cv2.INTER_AREA,
-                    )
-                    cropped_img = rearrange(cropped_img, "h w c -> c h w")
-                    cropped_imgs.append(cropped_img)
-                bboxes = np.asarray(bboxes)
-                cropped_imgs = np.asarray(cropped_imgs)
-                obj_repr["bbox"][view] = bboxes
-                obj_repr["cropped_img"][view] = cropped_imgs
-            filled_prompt.append(obj_repr)
-    raw_prompt = [filled_prompt]
-    max_n_objs_prompt = {view: 0 for view in views}
-    for prompt in raw_prompt:
-        for token in prompt:
-            if isinstance(token, dict):
+            for l in range(L_obs):
+                rgb_dict_this_step = any_slice(rgb_dict, np.s_[l])
+                segm_dict_this_step = any_slice(segm_dict, np.s_[l])
                 for view in views:
-                    max_n_objs_prompt[view] = max(
-                        max_n_objs_prompt[view], len(token["cropped_img"][view])
-                    )
-    raw_prompt_token_type, word_batch, image_batch = [], [], []
-    for prompt in raw_prompt:
-        token_type = []
-        for token in prompt:
-            if isinstance(token, int):
-                token_type.append(0)
-                word_batch.append(token)
-            elif isinstance(token, dict):
-                token_type.append(1)
-                n_objs_prompt = {
-                    view: len(token["cropped_img"][view]) for view in views
-                }
-                # add mask
-                token["mask"] = {
-                    view: np.ones((n_objs_prompt[view],), dtype=bool)
-                    for view in views
-                }
-                n_objs_to_pad = {
-                    view: max_n_objs_prompt[view] - n_objs_prompt[view]
-                    for view in views
-                }
-                objs_pad = {
-                    "bbox": {
-                        view: np.zeros((n_objs_to_pad[view], 4), dtype=np.int64)
-                        for view in views
-                    },
-                    "cropped_img": {
-                        view: np.zeros(
-                            (n_objs_to_pad[view], 3, 32, 32),
-                            dtype=np.uint8,
+                    rgb_this_view = rgb_dict_this_step[view]
+                    segm_this_view = segm_dict_this_step[view]
+                    bboxes = []
+                    cropped_imgs = []
+                    n_pad = 0
+                    for obj_id in objects:
+                        ys, xs = np.nonzero(segm_this_view == obj_id)
+                        if len(xs) < 2 or len(ys) < 2:
+                            n_pad += 1
+                            continue
+                        xmin, xmax = np.min(xs), np.max(xs)
+                        ymin, ymax = np.min(ys), np.max(ys)
+                        x_center, y_center = (xmin + xmax) / 2, (ymin + ymax) / 2
+                        h, w = ymax - ymin, xmax - xmin
+                        bboxes.append([int(x_center), int(y_center), int(h), int(w)])
+                        cropped_img = rgb_this_view[:, ymin: ymax + 1, xmin: xmax + 1]
+                        if cropped_img.shape[1] != cropped_img.shape[2]:
+                            diff = abs(cropped_img.shape[1] - cropped_img.shape[2])
+                            pad_before, pad_after = int(diff / 2), diff - int(diff / 2)
+                            if cropped_img.shape[1] > cropped_img.shape[2]:
+                                pad_width = ((0, 0), (0, 0), (pad_before, pad_after))
+                            else:
+                                pad_width = ((0, 0), (pad_before, pad_after), (0, 0))
+                            cropped_img = np.pad(
+                                cropped_img, pad_width, mode="constant", constant_values=0
+                            )
+                            assert cropped_img.shape[1] == cropped_img.shape[2], "INTERNAL"
+                        cropped_img = rearrange(cropped_img, "c h w -> h w c")
+                        cropped_img = np.asarray(cropped_img)
+                        cropped_img = cv2.resize(
+                            cropped_img,
+                            (32, 32),
+                            interpolation=cv2.INTER_AREA,
                         )
-                        for view in views
-                    },
-                    "mask": {
-                        view: np.zeros((n_objs_to_pad[view]), dtype=bool)
-                        for view in views
-                    },
-                }
-                token = any_concat([token, objs_pad], dim=0)
-                image_batch.append(token)
-        raw_prompt_token_type.append(token_type)
-    assert sum([len(prompt) for prompt in raw_prompt_token_type]) == len(
-        word_batch
-    ) + len(image_batch)
-    word_batch = any_stack(word_batch, dim=0)
-    image_batch = any_to_datadict(stack_sequence_fields(image_batch))
-
-    word_batch = any_to_torch_tensor(word_batch)
-    image_batch = image_batch.to_torch_tensor()
-    return raw_prompt_token_type, word_batch, image_batch
-
-
-def prepare_obs(
-        *,
-        obs: dict,
-        rgb_dict: dict | None = None,
-        meta: dict,
-):
-    assert not (rgb_dict is not None and "rgb" in obs)
-    rgb_dict = rgb_dict or obs.pop("rgb")
-    segm_dict = obs.pop("segm")
-    views = sorted(rgb_dict.keys())
-    assert meta["n_objects"] == len(meta["obj_id_to_info"])
-    objects = list(meta["obj_id_to_info"].keys())
-
-    L_obs = get_batch_size(obs)
-
-    obs_list = {
-        "ee": obs["ee"],
-        "objects": {
-            "cropped_img": {view: [] for view in views},
-            "bbox": {view: [] for view in views},
-            "mask": {view: [] for view in views},
-        },
-    }
-
-    for l in range(L_obs):
-        rgb_dict_this_step = any_slice(rgb_dict, np.s_[l])
-        segm_dict_this_step = any_slice(segm_dict, np.s_[l])
-        for view in views:
-            rgb_this_view = rgb_dict_this_step[view]
-            segm_this_view = segm_dict_this_step[view]
-            bboxes = []
-            cropped_imgs = []
-            n_pad = 0
-            for obj_id in objects:
-                ys, xs = np.nonzero(segm_this_view == obj_id)
-                if len(xs) < 2 or len(ys) < 2:
-                    n_pad += 1
-                    continue
-                xmin, xmax = np.min(xs), np.max(xs)
-                ymin, ymax = np.min(ys), np.max(ys)
-                x_center, y_center = (xmin + xmax) / 2, (ymin + ymax) / 2
-                h, w = ymax - ymin, xmax - xmin
-                bboxes.append([int(x_center), int(y_center), int(h), int(w)])
-                cropped_img = rgb_this_view[:, ymin: ymax + 1, xmin: xmax + 1]
-                if cropped_img.shape[1] != cropped_img.shape[2]:
-                    diff = abs(cropped_img.shape[1] - cropped_img.shape[2])
-                    pad_before, pad_after = int(diff / 2), diff - int(diff / 2)
-                    if cropped_img.shape[1] > cropped_img.shape[2]:
-                        pad_width = ((0, 0), (0, 0), (pad_before, pad_after))
-                    else:
-                        pad_width = ((0, 0), (pad_before, pad_after), (0, 0))
-                    cropped_img = np.pad(
-                        cropped_img, pad_width, mode="constant", constant_values=0
-                    )
-                    assert cropped_img.shape[1] == cropped_img.shape[2], "INTERNAL"
-                cropped_img = rearrange(cropped_img, "c h w -> h w c")
-                cropped_img = np.asarray(cropped_img)
-                cropped_img = cv2.resize(
-                    cropped_img,
-                    (32, 32),
-                    interpolation=cv2.INTER_AREA,
+                        cropped_img = rearrange(cropped_img, "h w c -> c h w")
+                        cropped_imgs.append(cropped_img)
+                    bboxes = np.asarray(bboxes)
+                    cropped_imgs = np.asarray(cropped_imgs)
+                    mask = np.ones(len(bboxes), dtype=bool)
+                    if n_pad > 0:
+                        bboxes = np.concatenate(
+                            [bboxes, np.zeros((n_pad, 4), dtype=bboxes.dtype)], axis=0
+                        )
+                        cropped_imgs = np.concatenate(
+                            [
+                                cropped_imgs,
+                                np.zeros(
+                                    (n_pad, 3, 32, 32),
+                                    dtype=cropped_imgs.dtype,
+                                ),
+                            ],
+                            axis=0,
+                        )
+                        mask = np.concatenate([mask, np.zeros(n_pad, dtype=bool)], axis=0)
+                    obs_list["objects"]["bbox"][view].append(bboxes)
+                    obs_list["objects"]["cropped_img"][view].append(cropped_imgs)
+                    obs_list["objects"]["mask"][view].append(mask)
+            for view in views:
+                obs_list["objects"]["bbox"][view] = np.stack(
+                    obs_list["objects"]["bbox"][view], axis=0
                 )
-                cropped_img = rearrange(cropped_img, "h w c -> c h w")
-                cropped_imgs.append(cropped_img)
-            bboxes = np.asarray(bboxes)
-            cropped_imgs = np.asarray(cropped_imgs)
-            mask = np.ones(len(bboxes), dtype=bool)
-            if n_pad > 0:
-                bboxes = np.concatenate(
-                    [bboxes, np.zeros((n_pad, 4), dtype=bboxes.dtype)], axis=0
+                obs_list["objects"]["cropped_img"][view] = np.stack(
+                    obs_list["objects"]["cropped_img"][view], axis=0
                 )
-                cropped_imgs = np.concatenate(
-                    [
-                        cropped_imgs,
-                        np.zeros(
-                            (n_pad, 3, 32, 32),
-                            dtype=cropped_imgs.dtype,
-                        ),
-                    ],
-                    axis=0,
+                obs_list["objects"]["mask"][view] = np.stack(
+                    obs_list["objects"]["mask"][view], axis=0
                 )
-                mask = np.concatenate([mask, np.zeros(n_pad, dtype=bool)], axis=0)
-            obs_list["objects"]["bbox"][view].append(bboxes)
-            obs_list["objects"]["cropped_img"][view].append(cropped_imgs)
-            obs_list["objects"]["mask"][view].append(mask)
-    for view in views:
-        obs_list["objects"]["bbox"][view] = np.stack(
-            obs_list["objects"]["bbox"][view], axis=0
-        )
-        obs_list["objects"]["cropped_img"][view] = np.stack(
-            obs_list["objects"]["cropped_img"][view], axis=0
-        )
-        obs_list["objects"]["mask"][view] = np.stack(
-            obs_list["objects"]["mask"][view], axis=0
-        )
 
-    obs = any_to_datadict(any_stack([obs_list], dim=0))
-    obs = obs.to_torch_tensor()
-    obs = any_transpose_first_two_axes(obs)
-    return obs
+            obs = any_to_datadict(any_stack([obs_list], dim=0))
+            obs = obs.to_torch_tensor()
+            obs = any_transpose_first_two_axes(obs)
+            return obs
 
+        class ResetFaultToleranceWrapper(Wrapper):
+            max_retries = 10
 
-class ResetFaultToleranceWrapper(Wrapper):
-    max_retries = 10
+            def __init__(self, env):
+                super().__init__(env)
 
-    def __init__(self, env):
-        super().__init__(env)
+            def reset(self):
+                for _ in range(self.max_retries):
+                    try:
+                        return self.env.reset()
+                    except:
+                        current_seed = self.env.unwrapped.task.seed
+                        self.env.global_seed = current_seed + 1
+                raise RuntimeError(
+                    "Failed to reset environment after {} retries".format(self.max_retries)
+                )
 
-    def reset(self):
-        for _ in range(self.max_retries):
-            try:
-                return self.env.reset()
-            except:
-                current_seed = self.env.unwrapped.task.seed
-                self.env.global_seed = current_seed + 1
-        raise RuntimeError(
-            "Failed to reset environment after {} retries".format(self.max_retries)
-        )
+        class TimeLimitWrapper(_TimeLimit):
+            def __init__(self, env, bonus_steps: int = 0):
+                super().__init__(env, env.task.oracle_max_steps + bonus_steps)
 
-
-class TimeLimitWrapper(_TimeLimit):
-    def __init__(self, env, bonus_steps: int = 0):
-        super().__init__(env, env.task.oracle_max_steps + bonus_steps)
-
-
-if __name__ == "__main__":
-    # python3 scripts/example.py --ckpt='/data/net/dl_data/ProjectDatasets_bkx/VIMA_pretrained_models/20M.ckpt'
-    #                            --device='cpu'
-    #                            --partition='placement_generalization'
-    #                            --task='visual_manipulation'
-    arg = argparse.ArgumentParser()
-    arg.add_argument("--partition", type=str, default="placement_generalization")
-    arg.add_argument("--task", type=str, default="visual_manipulation")
-    arg.add_argument("--ckpt", type=str,
-                     default='/data/net/dl_data/ProjectDatasets_bkx/VIMA_pretrained_models/20M.ckpt')
-    arg.add_argument("--device", default='cpu')
-    arg = arg.parse_args()
-    main(arg)
+        if __name__ == "__main__":
+            # python3 scripts/example.py --ckpt='/data/net/dl_data/ProjectDatasets_bkx/VIMA_pretrained_models/20M.ckpt'
+            #                            --device='cpu'
+            #                            --partition='placement_generalization'
+            #                            --task='visual_manipulation'
+            arg = argparse.ArgumentParser()
+            arg.add_argument("--partition", type=str, default="placement_generalization")
+            arg.add_argument("--task", type=str, default="visual_manipulation")
+            arg.add_argument("--ckpt", type=str,
+                             default='/data/net/dl_data/ProjectDatasets_bkx/VIMA_pretrained_models/20M.ckpt')
+            arg.add_argument("--device", default='cpu')
+            arg = arg.parse_args()
+            main(arg)
