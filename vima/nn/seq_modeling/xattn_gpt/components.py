@@ -179,7 +179,7 @@ class XAttention(nn.Module):
         queries = self.transpose_for_scores(queries, self.dim_per_head)
         keys = self.transpose_for_scores(keys, self.dim_per_head)
         values = self.transpose_for_scores(values, self.dim_per_head)
-
+        #(1,24,6,32)
         # Take the dot product between the queries and keys to get the raw attention scores.
         if self._fp32_logits:
             queries = queries.to(torch.float32)
@@ -195,9 +195,9 @@ class XAttention(nn.Module):
         attention_scores = attention_scores / math.sqrt(q_head_dim)
 
         if attention_mask is not None:
-            assert attention_mask.shape == (batch_size, kv_len)
+            assert attention_mask.shape == (batch_size, kv_len)# (1,11)
             assert attention_mask.dtype == torch.bool
-            attention_mask = self.invert_attention_mask(attention_mask)
+            attention_mask = self.invert_attention_mask(attention_mask)# (1,1,1,11)
             attention_mask = attention_mask.to(attention_scores.dtype)
             attention_scores = attention_scores + attention_mask
 
@@ -208,11 +208,11 @@ class XAttention(nn.Module):
         attention_probs = attention_probs.to(values.dtype)
 
         context_layer = torch.matmul(attention_probs, values)
-
+        # (1,24,6,32)
         context_layer = context_layer.permute(0, 2, 1, 3).contiguous()
         new_context_layer_shape = context_layer.size()[:-2] + (hiddens,)
         context_layer = context_layer.view(*new_context_layer_shape)
-
+        # (1,6,768)
         # Output projection
         attention_output = self.attention_out(context_layer)
         attention_output = attention_output + q

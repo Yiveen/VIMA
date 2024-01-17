@@ -11,6 +11,7 @@ thirdparty/
 venv/
 VIMABench/
 data/
+selected_VL.zip
 .vscode/
 .idea/
 .Python

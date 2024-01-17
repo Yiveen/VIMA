@@ -269,6 +269,7 @@ class VIMAPolicy(nn.Module):
 
         ee_feats = self.end_effector_encoder(ee)
         ee_feats = ee_feats.unsqueeze(2).repeat(1, 1, img_feats.shape[-2], 1)
+        # (1,1,2) -> (1,1,6,2)
 
         obs_feats = self.obs_fusion_layer(torch.cat([img_feats, ee_feats], dim=-1))
 

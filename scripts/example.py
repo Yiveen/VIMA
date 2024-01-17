@@ -14,6 +14,7 @@ from gym.wrappers import TimeLimit as _TimeLimit
 from gym import Wrapper
 import torch
 import argparse
+import time
 
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
@@ -85,9 +86,9 @@ def main(cfg):
     env = TimeLimitWrapper(
         ResetFaultToleranceWrapper(
             make(
-                cfg.task,
+                cfg.task, #task_name
                 modalities=["segm", "rgb"],
-                task_kwargs=PARTITION_TO_SPECS["test"][cfg.partition][cfg.task],
+                task_kwargs=PARTITION_TO_SPECS["test"][cfg.partition][cfg.task], #指定到ymal文件中具体某一个task
                 seed=seed,
                 render_prompt=True,
                 display_debug_window=True,
@@ -135,6 +136,7 @@ def main(cfg):
             obs = prepare_obs(obs=obs, rgb_dict=None, meta=meta_info).to_torch_tensor(
                 device=cfg.device
             )
+            print('wdsfsdfd',obs['objects']['cropped_img']['front'].shape)
             obs_token_this_step, obs_mask_this_step = policy.forward_obs_token(obs)
             obs_token_this_step = obs_token_this_step.squeeze(0)
             obs_mask_this_step = obs_mask_this_step.squeeze(0)
@@ -245,28 +247,27 @@ def main(cfg):
 
             # =======================yiwen debug ============================
             # 创建可视化窗口
-            from matplotlib import pyplot as plt
+            # from matplotlib import pyplot as plt
+            # #
+            # plt.figure()
+            # plt.subplot(121)
+            # plt.imshow(top)
+            # plt.title('Top_view \n Green square is the initial position. \n  Red point is the finial put position.')
             #
-            plt.figure()
-            plt.subplot(121)
-            plt.imshow(top)
-            plt.title('Top_view \n Green square is the initial position. \n  Red point is the finial put position.')
-
-            plt.scatter(pos_11 * 256, (pos_10) * 128, c='red', marker='o', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
-            plt.scatter(pos_01 * 256, (pos_00) * 128, c='green', marker='s', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
-            plt.subplot(122)
-            plt.imshow(front)
-            plt.title('Front_view \n Green square is the initial position. \n  Red point is the finial put position.')
-
-            plt.scatter(pos_11 * 256, (pos_10) * 128, c='red', marker='o', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
-            plt.scatter(pos_01 * 256, (pos_00) * 128, c='green', marker='s', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
-            plt.suptitle(
-                'Model output(Varaibles:actions["pose0_position"],actions["pose1_position"]) \n For initial position [{:.2f}, {:.2f}] \n For finial put position [{:.2f}, {:.2f}]'.format(
-                    np.round(pos_00, 1), np.round(pos_01, 1), np.round(pos_10, 1), np.round(pos_11, 1)))
-            plt.show()
+            # plt.scatter(pos_11 * 256, (pos_10) * 128, c='red', marker='o', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
+            # plt.scatter(pos_01 * 256, (pos_00) * 128, c='green', marker='s', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
+            # plt.subplot(122)
+            # plt.imshow(front)
+            # plt.title('Front_view \n Green square is the initial position. \n  Red point is the finial put position.')
+            #
+            # plt.scatter(pos_11 * 256, (pos_10) * 128, c='red', marker='o', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
+            # plt.scatter(pos_01 * 256, (pos_00) * 128, c='green', marker='s', s=100)  # 参数c表示颜色，marker表示标记样式，s表示大小
+            # plt.suptitle(
+            #     'Model output(Varaibles:actions["pose0_position"],actions["pose1_position"]) \n For initial position [{:.2f}, {:.2f}] \n For finial put position [{:.2f}, {:.2f}]'.format(
+            #         np.round(pos_00, 1), np.round(pos_01, 1), np.round(pos_10, 1), np.round(pos_11, 1)))
+            # plt.show()
 
             # =====================================================================
-
 
 
 
@@ -280,6 +281,7 @@ def main(cfg):
             )
             actions = {k: v.cpu().numpy() for k, v in actions.items()}
             actions = any_slice(actions, np.s_[0, 0])
+            time.sleep(1.5)
             obs, _, done, info = env.step(actions)
             elapsed_steps += 1
             if done:
@@ -290,6 +292,8 @@ def prepare_prompt(*, prompt: str, prompt_assets: dict, views: list[str]):
     views = sorted(views)
     encoding = tokenizer.encode(prompt, add_special_tokens=True)
     prompt_ids, prompt_tokens = encoding.ids, encoding.tokens
+    # [5306, 8, 32104, 139, 8, 32100, 3, 5, 1]
+    # ['▁Put', '▁the', '{dragged_obj_1}', '▁into', '▁the', '{base_obj}', '▁', '.', '</s>']
     assert set(prompt_assets.keys()) == set(
         [token[1:-1] for token in prompt_tokens if token in PLACEHOLDERS]
     )

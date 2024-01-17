@@ -86,6 +86,8 @@ class ObjEncoder(nn.Module):
         img_feats = {
             view: self.cropped_img_encoder(cropped_img[view]) for view in self._views
         }
+        print('sdsdedeffe',cropped_img['top'].shape)
+        #{'front':(1,3,768),'top':(1,3,768)} or (2,1,768),(2,1,768)
         # normalize bbox
         bbox = {view: bbox[view].float() for view in self._views}
         _normalizer = torch.tensor(

@@ -38,11 +38,11 @@ class ViTEncoder(nn.Module):
         x: (..., 3, H, W)
         """
         assert x.dim() >= 4
-        leading_dim = x.shape[:-3]
+        leading_dim = x.shape[:-3] #torch.size(1,3)
         x = basic_image_tensor_preprocess(x, mean=VIMA_IMG_MEAN, std=VIMA_IMG_STD)
-        x = x.flatten(0, x.dim() - 4)
-        x = self.vit(x)
-        x = x.view(*leading_dim, self.output_dim)
+        x = x.flatten(0, x.dim() - 4) #(2,3,32,32) or (3,3,32,32)
+        x = self.vit(x) #(2,768) (3,768)
+        x = x.view(*leading_dim, self.output_dim) #(2,1,768) (1,3,768)
         return x
 
 
